@@ -1,0 +1,50 @@
+name: Windows build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build
+        run: dotnet build src/ClaudeLinkLite/ClaudeLinkLite.csproj -c Release --nologo
+      - name: Run isolated tests
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path artifacts -Force | Out-Null
+          $report = Join-Path $PWD 'artifacts/self-test-report.json'
+          $exe = Join-Path $PWD 'src/ClaudeLinkLite/bin/Release/net8.0-windows/ClaudeLinkLite.exe'
+          $process = Start-Process -FilePath $exe -ArgumentList @('--self-test', $report) -WindowStyle Hidden -Wait -PassThru
+          if ($process.ExitCode -ne 0) { throw 'Self-tests failed' }
+          $results = Get-Content -LiteralPath $report -Raw | ConvertFrom-Json
+          if ($results.failed -ne 0) { throw 'Test report contains failures' }
+          Write-Output ("Passed {0} of {1} tests" -f $results.passed, $results.total)
+      - name: Publish portable Windows package
+        shell: pwsh
+        run: |
+          dotnet publish src/ClaudeLinkLite/ClaudeLinkLite.csproj -c Release -r win-x64 --self-contained true -o dist/windows-x64 --nologo
+          if ($LASTEXITCODE -ne 0) { throw 'Publish failed' }
+          Copy-Item -LiteralPath README.md, LICENSE -Destination dist/windows-x64
+          Compress-Archive -Path dist/windows-x64/* -DestinationPath dist/claude-codex-sync-windows-x64.zip
+      - name: Upload portable package and test report
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: claude-codex-sync-windows-x64
+          path: |
+            dist/*.zip
+            artifacts/self-test-report.json
+          retention-days: 14
+
