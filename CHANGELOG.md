@@ -10,4 +10,3 @@
 - Include backups, capture journals, isolated tests, and a Windows build workflow.
 
 This preview does not guarantee instant UI refresh in active official clients. Unknown or rewritten histories pause synchronization.
-

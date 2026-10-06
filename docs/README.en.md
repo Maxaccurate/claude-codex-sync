@@ -33,4 +33,3 @@ dotnet publish src/ClaudeLinkLite/ClaudeLinkLite.csproj -c Release -r win-x64 --
 ```
 
 See [CONTRIBUTING](../CONTRIBUTING.md) for isolated tests and architecture. MIT licensed, with third-party notices retained. This is an independent project, unaffiliated with Anthropic, OpenAI, or CC Switch.
-

@@ -38,4 +38,3 @@ Before shipping format changes, exercise both directions, duplicate prevention, 
 Describe the observable behavior and the relevant checks. Report app/CLI versions and the status message; redact paths, account IDs, and conversation text. Do not attach `Data`, auth files, journals, SQLite databases, or raw chat transcripts.
 
 Keep third-party notices when adapting existing code. Downloadable archives should include licenses and documentation and exclude all runtime data. The shipped embedded debug information must use mapped source paths rather than a developer's home directory.
-

@@ -47,4 +47,3 @@ jobs:
             dist/*.zip
             artifacts/self-test-report.json
           retention-days: 14
-

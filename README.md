@@ -90,4 +90,3 @@ if ($process.ExitCode -ne 0) { throw 'Self-tests failed' }
 本项目采用 MIT 许可证。历史可选服务接入模块的认证和协议转换移植自 [CC Switch](https://github.com/farion1231/cc-switch)，增量桥接设计参考 [claudeimportfromcodex](https://github.com/FredrikAhman/claudeimportfromcodex)。第三方版权与许可证保留在 [THIRD-PARTY-NOTICES](src/ClaudeLinkLite/THIRD-PARTY-NOTICES.md) 和相邻 `LICENSE-*.txt` 中。
 
 历史服务切换界面仍可通过 `--provider-settings` 打开；默认同步流程不需要它。
-
